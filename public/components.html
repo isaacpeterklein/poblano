@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Components - Poblano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="https://fav.farm/🌶️" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <span class="nav-brand">Poblano</span>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="docs.html" class="nav-link">Docs</a>
+    <a href="components.html" class="nav-link active">Components</a>
+    <a href="examples.html" class="nav-link">Examples</a>
+  </div>
+</nav>
+<main class="main">
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">hero</h2><p class="heading-sub">A full-width banner section. The first line after the keyword is the heading, the second is the subtitle.</p></div>
+<pre class="code-block"><code>hero
+My Page Title
+A short subtitle goes here.</code></pre>
+<div class="example-box"><section class="hero" style="padding:2rem 0 1rem;"><h1 style="font-size:2rem;font-weight:700;margin-bottom:0.5rem;">My Page Title</h1><p style="opacity:0.7;">A short subtitle goes here.</p></section></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">text</h2><p class="heading-sub">A plain paragraph. Everything after the keyword is rendered as a paragraph.</p></div>
+<pre class="code-block"><code>text
+Poblano is a static site generator with its own simple syntax.</code></pre>
+<div class="example-box"><p class="text-block">Poblano is a static site generator with its own simple syntax.</p></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">card</h2><p class="heading-sub">A boxed content block with a title and body. Great for features, bios, or any grouped content.</p></div>
+<pre class="code-block"><code>card
+About Me
+I am an engineer based in NYC.</code></pre>
+<div class="example-box"><div class="card"><h2>About Me</h2><p>I am an engineer based in NYC.</p></div></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">button</h2><p class="heading-sub">A styled button. The first line is the label, the second is the URL it links to.</p></div>
+<pre class="code-block"><code>button
+View on GitHub
+https://github.com/isaacpeterklein/poblano</code></pre>
+<div class="example-box"><a href="https://github.com/isaacpeterklein/poblano" class="btn">View on GitHub</a></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">link</h2><p class="heading-sub">An inline hyperlink. First line is the label, second is the URL.</p></div>
+<pre class="code-block"><code>link
+Read the docs
+docs.html</code></pre>
+<div class="example-box"><a href="docs.html" class="link">Read the docs</a></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">image</h2><p class="heading-sub">An image element. First line is the src (path or URL), second is the alt text.</p></div>
+<pre class="code-block"><code>image
+https://i.ibb.co/08T9FLr/IMG-4905.jpg
+Poblano the dog</code></pre>
+<div class="example-box"><img src="https://i.ibb.co/08T9FLr/IMG-4905.jpg" alt="Poblano the dog" class="site-image" style="max-height:200px;width:auto;" /></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">grid</h2><p class="heading-sub">A responsive card grid. Each line defines one card: Title | Body | Button Label > URL. The button is optional.</p></div>
+<pre class="code-block"><code>grid
+Project One | A cool project I built. | View Demo &gt; https://example.com
+Project Two | Another thing I made.
+Project Three | No button on this one.</code></pre>
+<div class="example-box"><div class="grid"><div class="card"><h2>Project One</h2><p>A cool project I built.</p><a href="https://example.com" class="btn card-btn">View Demo</a></div><div class="card"><h2>Project Two</h2><p>Another thing I made.</p></div><div class="card"><h2>Project Three</h2><p>No button on this one.</p></div></div></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">gallery</h2><p class="heading-sub">A responsive image grid. Each line is: image-src | alt text.</p></div>
+<pre class="code-block"><code>gallery
+https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400 | Mountains
+https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400 | Forest
+https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400 | Beach</code></pre>
+<div class="example-box"><div class="gallery"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400" alt="Mountains" class="gallery-img" /><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400" alt="Forest" class="gallery-img" /><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" alt="Beach" class="gallery-img" /></div></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">code</h2><p class="heading-sub">A syntax/code block. Use it to show literal text or code examples. Everything after the keyword is shown verbatim.</p></div>
+<pre class="code-block"><code>code
+poblano new mysite
+poblano build</code></pre>
+<div class="example-box"><pre class="code-block"><code>poblano new mysite
+poblano build</code></pre></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">divider</h2><p class="heading-sub">A simple horizontal rule to visually separate sections. Takes no content.</p></div>
+<pre class="code-block"><code>divider</code></pre>
+<div class="example-box"><hr class="divider" /></div>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">footer</h2><p class="heading-sub">A site footer, typically placed at the bottom of a page.</p></div>
+<pre class="code-block"><code>footer
+My Site — Built with Poblano</code></pre>
+</main>
+</body>
+</html>

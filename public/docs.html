@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docs - Poblano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="https://fav.farm/🌶️" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <span class="nav-brand">Poblano</span>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="docs.html" class="nav-link active">Docs</a>
+    <a href="components.html" class="nav-link">Components</a>
+    <a href="examples.html" class="nav-link">Examples</a>
+  </div>
+</nav>
+<main class="main">
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">Install</h2><p class="heading-sub">Paste this into your terminal to install Poblano in one line.</p></div>
+<pre class="code-block"><code>curl -fsSL https://raw.githubusercontent.com/isaacpeterklein/poblano/master/install.sh | sh</code></pre>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">Quick Start</h2><p class="heading-sub">Three commands to go from nothing to a running site.</p></div>
+<pre class="code-block"><code>poblano new mysite
+poblano build
+poblano serve</code></pre>
+<p class="text-block">poblano new creates a starter mysite.pob file. poblano build compiles it into a dist/ folder. poblano serve builds, serves at localhost:3000, and watches for changes.</p>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">Commands</h2><p class="heading-sub">All available CLI commands.</p></div>
+<pre class="code-block"><code>poblano new &lt;name&gt;     Create a new starter .pob file
+poblano build            Compile to dist/
+poblano build &lt;file&gt;   Build a specific .pob file
+poblano serve            Serve at localhost:3000 and watch for changes
+poblano serve &lt;file&gt;   Serve a specific .pob file</code></pre>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">File Format</h2><p class="heading-sub">A .pob file is plain text. Sections are separated by blank lines. The first line of each section is the keyword. Lines after that are the content.</p></div>
+<pre class="code-block"><code>config
+primary #4f46e5
+site-name My Site
+header
+home about contact
+home
+hero
+Welcome
+A subtitle here.
+card
+My Card
+Some body text.</code></pre>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">Config Block</h2><p class="heading-sub">The config block sets global options for your site. It should be the first block in your file.</p></div>
+<pre class="code-block"><code>config
+primary #6d28d9
+accent #a855f7
+font Inter
+dark-mode false
+site-name My Site
+logo /logo.png
+favicon /favicon.ico</code></pre>
+<p class="text-block">All keys are optional — anything you leave out falls back to a default. primary and accent are hex colors. font is any Google Font name. dark-mode accepts true or false.</p>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">Header Block</h2><p class="heading-sub">The header block defines your navbar. Each word becomes both a page and a nav link. Order matters — it controls the order links appear in the nav.</p></div>
+<pre class="code-block"><code>header
+home about projects contact</code></pre>
+<p class="text-block">Every word listed here needs a matching page section further down in the file, or Poblano will warn you at build time.</p>
+<hr class="divider" />
+<div class="heading"><h2 class="heading-title">Pages</h2><p class="heading-sub">A page section starts with the page name matching one of your header items. Everything below it (until the next page) belongs to that page.</p></div>
+<pre class="code-block"><code>about
+hero
+About Me
+I build things.
+card
+Background
+I have been writing code for 8 years.</code></pre>
+</main>
+</body>
+</html>
