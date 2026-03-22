@@ -1,4 +1,4 @@
-# Poblano
+# Poblano 🌶️
 
 A lightweight, file-based static site generator with its own simple syntax. Write a single `.pob` file describing your entire site, run one command, and get a fully built static website.
 
