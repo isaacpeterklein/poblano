@@ -300,4 +300,6 @@ Most site generators require you to learn a framework, set up a project structur
 
 Write a text file. Run one command. Get a website.
 
-It's named after the pepper — mild enough for anyone, but with a little kick.
+It's named after my dog, Poblano or Pobby for short. Sometimes we call him Pob. He is a puggle, a beagle-pug mix. He is great.
+
+<img src="https://i.ibb.co/08T9FLr/IMG-4905.jpg" width="300"/>
