@@ -15,9 +15,12 @@ func New(name string) {
 
 	template := `config
 primary #4f46e5
+accent #7c3aed
 font Inter
 dark-mode false
 site-name ` + name + `
+logo
+favicon ` + `
 
 header
 home about projects contact

@@ -11,6 +11,10 @@ import (
 )
 
 func Build(site *parser.Site, outDir string) error {
+	// Clean output dir before each build
+	if err := os.RemoveAll(outDir); err != nil {
+		return err
+	}
 	if err := os.MkdirAll(outDir, 0755); err != nil {
 		return err
 	}
@@ -22,16 +26,13 @@ func Build(site *parser.Site, outDir string) error {
 
 	for _, page := range site.Pages {
 		html := generatePage(site, page)
-		var dir string
+		var outFile string
 		if strings.ToLower(page.Name) == "home" {
-			dir = outDir
+			outFile = filepath.Join(outDir, "index.html")
 		} else {
-			dir = filepath.Join(outDir, strings.ToLower(page.Name))
-			if err := os.MkdirAll(dir, 0755); err != nil {
-				return err
-			}
+			outFile = filepath.Join(outDir, strings.ToLower(page.Name)+".html")
 		}
-		if err := os.WriteFile(filepath.Join(dir, "index.html"), []byte(html), 0644); err != nil {
+		if err := os.WriteFile(outFile, []byte(html), 0644); err != nil {
 			return err
 		}
 	}
@@ -41,12 +42,18 @@ func Build(site *parser.Site, outDir string) error {
 }
 
 func generatePage(site *parser.Site, page parser.Page) string {
-	nav := generateNav(site.NavItems, page.Name)
+	isHome := strings.ToLower(page.Name) == "home"
+	nav := generateNav(site.NavItems, page.Name, isHome, site.Config)
 	body := generateComponents(page.Components)
 
 	darkClass := ""
 	if site.Config.DarkMode {
 		darkClass = " dark"
+	}
+
+	favicon := ""
+	if site.Config.Favicon != "" {
+		favicon = fmt.Sprintf("\n  <link rel=\"icon\" href=\"%s\" />", site.Config.Favicon)
 	}
 
 	return fmt.Sprintf(`<!DOCTYPE html>
@@ -57,7 +64,7 @@ func generatePage(site *parser.Site, page parser.Page) string {
   <title>%s - %s</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=%s:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="%s" />
+  <link rel="stylesheet" href="%s" />%s
 </head>
 <body>
 %s
@@ -71,24 +78,24 @@ func generatePage(site *parser.Site, page parser.Page) string {
 		site.Config.SiteName,
 		strings.ReplaceAll(site.Config.Font, " ", "+"),
 		cssPath(page.Name),
+		favicon,
 		nav,
 		body,
 	)
 }
 
 func cssPath(pageName string) string {
-	if strings.ToLower(pageName) == "home" {
-		return "styles.css"
-	}
-	return "../styles.css"
+	return "styles.css"
 }
 
-func generateNav(items []string, activePage string) string {
+func generateNav(items []string, activePage string, isHome bool, config parser.Config) string {
 	var links []string
 	for _, item := range items {
-		href := "/"
-		if strings.ToLower(item) != "home" {
-			href = "/" + strings.ToLower(item) + "/"
+		var href string
+		if strings.ToLower(item) == "home" {
+			href = "index.html"
+		} else {
+			href = strings.ToLower(item) + ".html"
 		}
 		activeClass := ""
 		if strings.ToLower(item) == strings.ToLower(activePage) {
@@ -96,7 +103,13 @@ func generateNav(items []string, activePage string) string {
 		}
 		links = append(links, fmt.Sprintf(`    <a href="%s" class="nav-link%s">%s</a>`, href, activeClass, capitalize(item)))
 	}
-	return fmt.Sprintf("<nav class=\"navbar\">\n  <div class=\"nav-inner\">\n%s\n  </div>\n</nav>", strings.Join(links, "\n"))
+
+	brand := fmt.Sprintf(`    <span class="nav-brand">%s</span>`, config.SiteName)
+	if config.Logo != "" {
+		brand = fmt.Sprintf(`    <a href="index.html" class="nav-logo"><img src="%s" alt="%s" /></a>`, config.Logo, config.SiteName)
+	}
+
+	return fmt.Sprintf("<nav class=\"navbar\">\n  <div class=\"nav-inner\">\n%s\n%s\n  </div>\n</nav>", brand, strings.Join(links, "\n"))
 }
 
 func generateComponents(comps []parser.Component) string {
@@ -126,6 +139,7 @@ func generateCSS(config parser.Config) string {
 
 :root {
   --primary: %s;
+  --accent: %s;
   --bg: %s;
   --text: %s;
   --nav-bg: %s;
@@ -170,7 +184,25 @@ body {
 
 .nav-link:hover, .nav-link.active {
   opacity: 1;
+  color: var(--accent);
+}
+
+.nav-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-right: auto;
   color: var(--primary);
+}
+
+.nav-logo {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo img {
+  height: 32px;
+  width: auto;
 }
 
 .main {
@@ -266,7 +298,88 @@ footer {
   opacity: 0.6;
   font-size: 0.9rem;
 }
-`, config.Primary, bgColor, textColor, navBg, cardBg, borderColor, config.Font)
+
+.card-btn {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  padding: 0.5rem 1.1rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gallery-img {
+  width: 100%%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+.code-block {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  white-space: pre;
+}
+
+.example-box {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.example-box .hero {
+  padding: 2rem 0 1rem;
+}
+
+.comp-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-bottom: 0.5rem;
+}
+
+.heading {
+  margin-bottom: 1rem;
+}
+
+.heading-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.heading-sub {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-bottom: 0.25rem;
+}
+`, config.Primary, config.Accent, bgColor, textColor, navBg, cardBg, borderColor, config.Font)
 }
 
 func capitalize(s string) string {
