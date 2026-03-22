@@ -1,0 +1,5 @@
+{
+  "buildCommand": "go build -o poblano . && ./poblano build website.pob",
+  "outputDirectory": "dist",
+  "installCommand": ""
+}
