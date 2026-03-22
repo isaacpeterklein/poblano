@@ -4,19 +4,26 @@ A lightweight, file-based static site generator with its own simple syntax. Writ
 
 No config files. No dependencies. No framework knowledge required. Just write and build.
 
+Named after Poblano the dog — a puggle, a beagle-pug mix. He is great.
+
+<img src="https://i.ibb.co/08T9FLr/IMG-4905.jpg" width="280"/>
+
 ---
 
 ## Install
 
+**One-liner:**
+
 ```bash
-git clone https://github.com/yourusername/poblano
-cd poblano
-go build -o poblano .
+curl -fsSL https://raw.githubusercontent.com/isaacpeterklein/poblano/master/install.sh | sh
 ```
 
-Move the binary somewhere on your PATH:
+**Or build from source:**
 
 ```bash
+git clone https://github.com/isaacpeterklein/poblano
+cd poblano
+go build -o poblano .
 mv poblano /usr/local/bin/poblano
 ```
 
@@ -25,10 +32,9 @@ mv poblano /usr/local/bin/poblano
 ## Quick Start
 
 ```bash
-poblano new mysite
-# edit mysite.pob
-poblano build
-# open dist/index.html
+poblano new mysite     # create a starter mysite.pob file
+poblano build          # compile to dist/
+poblano serve          # build, serve at localhost:3000, and watch for changes
 ```
 
 ---
@@ -38,21 +44,23 @@ poblano build
 | Command | Description |
 |---|---|
 | `poblano new <name>` | Scaffold a new `<name>.pob` starter file |
-| `poblano build` | Build the site from the `.pob` file in the current directory |
+| `poblano build` | Build the `.pob` file in the current directory |
+| `poblano build <file>` | Build a specific `.pob` file |
+| `poblano serve` | Build, serve at localhost:3000, and watch for changes |
+| `poblano serve <file>` | Serve a specific `.pob` file |
 
-Output is written to a `dist/` folder.
+Output is written to a `dist/` folder. The folder is wiped and rebuilt on every run.
 
 ---
 
 ## The .pob File Format
 
-Everything lives in one `.pob` file. Sections are separated by **blank lines**. The first line of each section is the keyword (a component name, page name, `config`, or `header`). Lines after that are the content.
-
-### Basic structure
+Everything lives in one `.pob` file. Sections are separated by **blank lines**. The first line of each section is the keyword. Lines after that are the content.
 
 ```
 config
-primary #4f46e5
+primary #6d28d9
+accent #a855f7
 font Inter
 dark-mode false
 site-name My Site
@@ -85,34 +93,37 @@ My Site — Built with Poblano
 
 ### Rules
 
-- The `config` block should come first
-- The `header` block defines the navbar — each word becomes a page and a nav link
-- Page sections are identified by their name matching a nav item
+- `config` should come first
+- `header` defines the navbar — each word becomes a page and a nav link
+- Page sections match their name to a header item
 - Components inside a page are separated by blank lines
 - The first line after a component keyword is the **title**
 - Remaining lines are the **body**
+- Poblano warns at build time if a nav item has no matching page section, or if an unknown component or config key is used
 
 ---
 
 ## Config Options
 
-Defined in the `config` block at the top of your `.pob` file.
-
 | Key | Default | Description |
 |---|---|---|
 | `primary` | `#4f46e5` | Primary brand color (hex) |
+| `accent` | `#7c3aed` | Accent color for nav hover/active states |
 | `font` | `Inter` | Google Font family name |
 | `dark-mode` | `false` | Set to `true` for a dark theme |
 | `site-name` | `My Site` | Site title shown in the browser tab |
-
-Example:
+| `logo` | — | Path or URL to a logo image shown in the navbar |
+| `favicon` | — | Path or URL to a favicon |
 
 ```
 config
 primary #e11d48
+accent #fb7185
 font Poppins
-dark-mode true
-site-name Isaac's Portfolio
+dark-mode false
+site-name My Portfolio
+logo /logo.png
+favicon /favicon.ico
 ```
 
 ---
@@ -141,6 +152,63 @@ A short description of what this project does.
 
 ---
 
+### `grid`
+A responsive grid of cards. Each line is one card: `Title | Body | Button Label > URL`. The button is optional.
+
+```
+grid
+Project One | A cool project I built. | View Demo > https://example.com
+Project Two | Another thing I made.
+Project Three | No button on this one.
+```
+
+---
+
+### `gallery`
+A responsive image grid. Each line is: `image-src | alt text`.
+
+```
+gallery
+/images/photo1.jpg | Mountains
+/images/photo2.jpg | Forest
+https://example.com/image.jpg | Sunset
+```
+
+---
+
+### `heading`
+A large section heading with an optional subtitle below it.
+
+```
+heading
+My Section Title
+An optional subtitle or description here.
+```
+
+---
+
+### `text`
+A plain paragraph of text.
+
+```
+text
+This is a paragraph that will appear on the page.
+```
+
+---
+
+### `code`
+A styled code or syntax block. Everything after the keyword is displayed verbatim. Note: blank lines inside a code block will end the block — use indentation instead.
+
+```
+code
+poblano new mysite
+poblano build
+poblano serve
+```
+
+---
+
 ### `button`
 A styled button. First line is the label, second is the URL.
 
@@ -152,39 +220,8 @@ https://github.com/yourusername
 
 ---
 
-### `image`
-An image. First line is the src path or URL, second is the alt text.
-
-```
-image
-/images/photo.jpg
-A photo of me
-```
-
----
-
-### `text`
-A plain paragraph block.
-
-```
-text
-This is a paragraph of text that will appear on the page.
-```
-
----
-
-### `grid`
-A responsive grid container for laying out cards side by side.
-
-```
-grid
-My Projects
-```
-
----
-
 ### `link`
-A hyperlink. First line is the label, second is the URL.
+An inline hyperlink. First line is the label, second is the URL.
 
 ```
 link
@@ -194,45 +231,58 @@ https://github.com/yourusername
 
 ---
 
+### `image`
+An image. First line is the src, second is the alt text.
+
+```
+image
+/images/photo.jpg
+A photo of me
+```
+
+---
+
+### `divider`
+A horizontal rule to separate sections. Takes no content.
+
+```
+divider
+```
+
+---
+
 ### `footer`
-A footer at the bottom of the page.
+A site footer.
 
 ```
 footer
-© 2026 Isaac — Built with Poblano
+© 2026 My Site — Built with Poblano
 ```
 
 ---
 
 ## Output Structure
 
-Running `poblano build` generates a `dist/` folder:
-
 ```
 dist/
-├── index.html        # home page
-├── styles.css        # generated stylesheet
-├── about/
-│   └── index.html
-├── projects/
-│   └── index.html
-└── contact/
-    └── index.html
+├── index.html
+├── about.html
+├── projects.html
+├── contact.html
+└── styles.css
 ```
 
-Each page gets its own folder so URLs are clean (e.g. `/about/` instead of `/about.html`). Just drop the `dist/` folder onto any static host.
+Drop the `dist/` folder onto any static host.
 
 ---
 
 ## Hosting
 
-The `dist/` output is plain static HTML — host it anywhere:
-
-- [Netlify](https://netlify.com) — drag and drop the `dist/` folder
+- [Netlify](https://netlify.com) — drag and drop `dist/`
 - [Vercel](https://vercel.com)
 - [GitHub Pages](https://pages.github.com)
 - [Surge](https://surge.sh) — `surge dist/`
-- Any web server that can serve static files
+- Any web server that serves static files
 
 ---
 
@@ -241,6 +291,7 @@ The `dist/` output is plain static HTML — host it anywhere:
 ```
 config
 primary #6d28d9
+accent #a855f7
 font Inter
 dark-mode false
 site-name Jane Doe
@@ -255,15 +306,18 @@ A software engineer who loves building for the web.
 
 card
 What I Do
-I specialize in full-stack web development, with a focus on clean UIs and fast backends.
+Full-stack web development, clean UIs, fast backends.
 
 button
 See My Work
-/projects/
+projects.html
 
 about
-card
+heading
 My Background
+A little about me.
+
+text
 I've been building software for 8 years, working with startups and large companies alike.
 
 card
@@ -271,13 +325,13 @@ Skills
 JavaScript, Go, Python, React, PostgreSQL, Docker
 
 projects
-card
-Portfolio Site
-The site you're looking at — built with Poblano.
+hero
+Projects
+Things I've built.
 
-card
-Open Source CLI
-A developer tool for automating repetitive tasks.
+grid
+Portfolio Site | The site you're looking at — built with Poblano. | View Source > https://github.com/janedoe
+Open Source CLI | A developer tool for automating repetitive tasks. | View Source > https://github.com/janedoe
 
 contact
 card
@@ -296,10 +350,6 @@ footer
 
 ## Why Poblano?
 
-Most site generators require you to learn a framework, set up a project structure, install dependencies, and write config files before you see anything. Poblano skips all of that.
+Most site generators require you to learn a framework, install dependencies, and write config files before you see anything. Poblano skips all of that.
 
 Write a text file. Run one command. Get a website.
-
-It's named after my dog, Poblano or Pobby for short. Sometimes we call him Pob. He is a puggle, a beagle-pug mix. He is great.
-
-<img src="https://i.ibb.co/08T9FLr/IMG-4905.jpg" width="300"/>
